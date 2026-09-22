@@ -14,7 +14,8 @@ def price_option_bsm(
   ticker_symb: str, 
   strike: float,
   horizon:str, 
-  opt_type: str) -> dict[str, float]:
+  opt_type: str
+) -> dict[str, float]:
   """
   Calculates the theoretical BSM price and Greeks for a stock option.
 
