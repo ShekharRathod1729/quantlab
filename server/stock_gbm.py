@@ -6,10 +6,10 @@ def sim_terminal_gbm(
     mu : float, 
     sigma: float,
     T : float,
-    N : int,
+    N : int
 ) -> np.ndarray:
     """
-    Simulates the terminal price of a stock after time T
+    Simulates the terminal price of a stock after time T.
 
     Parameters
     ==========
@@ -42,7 +42,7 @@ def sim_path_gbm(
     I : int
 ) -> np.ndarray:
     """
-    Simulates the path of the stock price
+    Simulates the path of the stock price.
 
     Parameters
     ==========
