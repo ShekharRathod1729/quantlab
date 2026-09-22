@@ -1,11 +1,11 @@
-import sim_stock
-import matplotlib.pylab as plt
+import bsm_stocks
+import price_option_mcs
 
-terminal_prices = sim_stock.sim_stock_terminal("AAPL", "1m", 100000)
+for i in range(1, 11):
+  mcs_price = price_option_mcs.price_option("AAPL", 390, "1m", "call", i * 100000)
 
-dates, paths = sim_stock.sim_stock_paths("AAPL", "1m", 1000)
-plt.figure(figsize=(10, 6))
-plt.plot(dates, paths)
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.show()
+  print(f"The price of the option by Monte Carlo simulations is: {mcs_price: .4f}")
+
+bsm_price = bsm_stocks.price_option_bsm("AAPL", 390, "1m", "call")["price"]
+
+print(f"The price of the option by the BSM formulae is: {bsm_price: .4f}")

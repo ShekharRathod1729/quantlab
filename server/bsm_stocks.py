@@ -17,7 +17,7 @@ def price_option_bsm(
   opt_type: str
 ) -> dict[str, float]:
   """
-  Calculates the theoretical BSM price and Greeks for a stock option.
+  Calculates the theoretical BSM price and Greeks for a European option on a stock.
 
   Parameters
   ==========

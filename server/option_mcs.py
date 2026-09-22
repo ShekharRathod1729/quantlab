@@ -7,7 +7,7 @@ def price_european(
   r : float, 
   sigma: float,
   T : float,
-  num_sim : int,
+  num_sim : int
 ) -> float:
   """
   Calculates the value of a European option via Monte Carlo simulation.
