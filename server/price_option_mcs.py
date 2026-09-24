@@ -1,5 +1,8 @@
-import option_mcs
-import utils
+try:
+  from . import option_mcs, utils
+except ImportError:  # Allows running this module directly from server/.
+  import option_mcs
+  import utils
 import yfinance as yf
 
 HORIZONS = {
@@ -46,4 +49,3 @@ def price_option(
   sigma = utils.volatility(ticker)
 
   return option_mcs.price_european(opt_type, S, strike, r, sigma, T, num_sim)
-  

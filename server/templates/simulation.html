@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Stock simulation · QuantLab{% endblock %}
+{% block content %}
+<section class="intro"><p class="eyebrow">Geometric Brownian motion</p><h1>Simulate a stock’s future price</h1><p>Explore distributions and possible price paths using the stock’s historical return and volatility.</p></section>
+<section class="panel"><form id="simulation-form" class="form-grid">
+  <label>Stock <input id="stock-search" list="stocks" required placeholder="Search Apple or AAPL" autocomplete="off"><datalist id="stocks"></datalist><small id="catalog-status">Loading stock catalogue…</small></label>
+  <label>Time horizon <select id="horizon"><option value="1w">1 week</option><option value="1m" selected>1 month</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="1y">1 year</option></select></label>
+  <label>Simulations <input id="num-sim" type="number" min="10000" max="1000000" step="10000" value="10000" required></label>
+  <label>Paths displayed <input id="path-count" type="range" min="1" max="100" value="20"><output id="path-count-output">20</output></label>
+  <button type="submit">Run simulation</button>
+</form><p id="message" class="message" aria-live="polite"></p></section>
+<section id="results" hidden>
+  <div class="stats" id="stats"></div>
+  <div class="chart-grid"><article class="chart-card"><h2>Terminal-price distribution</h2><canvas id="terminal-chart"></canvas></article><article class="chart-card"><h2>Simulated paths</h2><canvas id="paths-chart"></canvas></article></div>
+</section>
+<script src="{{ url_for('static', filename='simulation.js') }}"></script>
+{% endblock %}
