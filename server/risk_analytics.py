@@ -32,11 +32,8 @@ def ret_and_vol(
     
     ret = w @ mu
     vol = np.sqrt(w @ Sigma @ w)
-    
-    return {
-        "Return" : ret,
-        "Volatility" : vol
-    }
+
+    return ret, vol
 
 def hist_var_cvar(
     asset_prices: np.ndarray, 
