@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Risk analytics · QuantLab{% endblock %}
+{% block content %}
+<section class="intro">
+  <p class="eyebrow">Portfolio risk measures</p>
+  <h1>Analyse portfolio risk</h1>
+  <p>Calculate VaR, CVaR, Sharpe ratio, and maximum drawdown for a weighted portfolio of stocks.</p>
+</section>
+
+<section class="panel">
+  <form id="risk-form">
+    <div class="form-grid">
+
+      <!-- Stock picker -->
+      <label style="grid-column:1/-1">
+        Stocks
+        <div style="display:flex;gap:8px">
+          <input id="stock-search" list="stocks" placeholder="Search Apple or AAPL" autocomplete="off" style="flex:1">
+          <datalist id="stocks"></datalist>
+          <button type="button" id="add-stock" class="secondary" style="white-space:nowrap">Add stock</button>
+        </div>
+        <small id="catalog-status">Loading stock catalogue…</small>
+      </label>
+
+      <!-- Dynamic weight rows inserted here -->
+      <div id="weight-rows" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px"></div>
+
+      <label>Portfolio value (USD) <input id="portfolio-value" type="number" min="1" step="100" value="100000" required></label>
+
+      <label>Historical period
+        <select id="period">
+          <option value="1mo">1 month</option>
+          <option value="3mo">3 months</option>
+          <option value="6mo">6 months</option>
+          <option value="1y" selected>1 year</option>
+          <option value="2y">2 years</option>
+          <option value="5y">5 years</option>
+          <option value="10y">10 years</option>
+        </select>
+      </label>
+
+      <label>Confidence level
+        <select id="confidence">
+          <option value="90">90%</option>
+          <option value="95" selected>95%</option>
+          <option value="99">99%</option>
+        </select>
+      </label>
+
+    </div>
+
+    <p id="weight-sum-msg" class="message" style="margin-top:10px"></p>
+
+    <div class="actions" style="margin-top:12px">
+      <button type="submit">Calculate risk measures</button>
+    </div>
+  </form>
+  <p id="message" class="message" aria-live="polite"></p>
+</section>
+
+<section id="results" hidden>
+  <h2 style="margin-bottom:14px">Risk measures</h2>
+
+  <div class="chart-grid" style="grid-template-columns:1fr 1fr;margin-bottom:24px">
+    <article class="chart-card">
+      <h2>Return &amp; volatility</h2>
+      <div id="ret-vol" class="stats"></div>
+    </article>
+    <article class="chart-card">
+      <h2>Sharpe ratio &amp; max drawdown</h2>
+      <div id="sharpe-mdd" class="stats"></div>
+    </article>
+  </div>
+
+  <div class="chart-grid" style="grid-template-columns:1fr 1fr">
+    <article class="chart-card">
+      <h2>Historical VaR &amp; CVaR</h2>
+      <div id="hist-risk" class="stats"></div>
+    </article>
+    <article class="chart-card">
+      <h2>Parametric VaR &amp; CVaR</h2>
+      <div id="param-risk" class="stats"></div>
+    </article>
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='risk.js') }}"></script>
+{% endblock %}

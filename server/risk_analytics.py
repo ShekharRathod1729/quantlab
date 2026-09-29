@@ -1,7 +1,11 @@
 import numpy as np
 import yfinance as yf
 from scipy.stats import norm
-import utils
+
+try:
+    from . import utils
+except ImportError:
+    import utils
 
 def ret_and_vol(
     mu: np.ndarray, 
