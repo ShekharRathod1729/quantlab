@@ -5,6 +5,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from flask import Flask, jsonify, render_template, request
+from werkzeug.exceptions import HTTPException
 
 try:  # Supports both `python server/app.py` and `flask --app server.app run`.
     from . import bsm_stocks, price_option_mcs, sim_stock
@@ -86,6 +87,8 @@ def create_app() -> Flask:
 
     @app.errorhandler(Exception)
     def calculation_failure(error: Exception):
+        if isinstance(error, HTTPException):
+            return error  # 404, 405, etc. – let Flask/Werkzeug handle them normally
         app.logger.exception("QuantLab calculation failed")
         return jsonify({"error": "Unable to retrieve market data or complete the calculation. Please try again."}), 502
 

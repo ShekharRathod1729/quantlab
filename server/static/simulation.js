@@ -6,7 +6,10 @@ document.querySelector('#simulation-form').addEventListener('submit', async even
   event.preventDefault(); message('Running simulations…', 'pending');
   const button = event.submitter; button.disabled = true;
   try {
-    const data = await post('/api/simulations', {ticker:document.querySelector('#stock-search').value, horizon:document.querySelector('#horizon').value, numSim:document.querySelector('#num-sim').value, pathCount:pathsInput.value});
+    // The datalist value is "AAPL – Apple Inc. (S&P 500)"; extract just the ticker.
+    const rawValue = document.querySelector('#stock-search').value;
+    const ticker = rawValue.split(' – ')[0].trim();
+    const data = await post('/api/simulations', {ticker, horizon:document.querySelector('#horizon').value, numSim:document.querySelector('#num-sim').value, pathCount:pathsInput.value});
     render(data); document.querySelector('#results').hidden = false; message('Simulation complete.');
   } catch (error) { message(error.message, 'error'); } finally { button.disabled = false; }
 });
