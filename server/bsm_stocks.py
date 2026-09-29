@@ -1,5 +1,8 @@
-import bsm
-import utils
+try:
+  from . import bsm, utils
+except ImportError:  # Allows running this module directly from server/.
+  import bsm
+  import utils
 import yfinance as yf
 
 HORIZONS = {

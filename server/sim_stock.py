@@ -1,5 +1,8 @@
-import stock_gbm
-import utils
+try:
+  from . import stock_gbm, utils
+except ImportError:  # Allows running this module directly from server/.
+  import stock_gbm
+  import utils
 import numpy as np
 import yfinance as yf
 import pandas as pd

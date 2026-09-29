@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Option pricing · QuantLab{% endblock %}
+{% block content %}
+<section class="intro"><p class="eyebrow">European options</p><h1>Price an option</h1><p>Calculate Black–Scholes–Merton results and compare them with Monte Carlo estimates.</p></section>
+<section class="panel"><form id="option-form" class="form-grid">
+  <label>Stock <input id="stock-search" list="stocks" required placeholder="Search Apple or AAPL" autocomplete="off"><datalist id="stocks"></datalist><small id="catalog-status">Loading stock catalogue…</small></label>
+  <label>Strike price (USD) <input id="strike" type="number" min="0.01" step="0.01" placeholder="e.g. 250" required></label>
+  <label>Time horizon <select id="horizon"><option value="1w">1 week</option><option value="1m" selected>1 month</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="1y">1 year</option></select></label>
+  <label>Option type <select id="option-type"><option value="call">Call</option><option value="put">Put</option></select></label>
+  <label>Monte Carlo simulations <input id="num-sim" type="number" min="10000" max="1000000" step="10000" value="10000" required></label>
+  <div class="actions"><button id="bsm" type="button" class="secondary">Calculate BSM</button><button type="submit">Calculate prices</button><button id="compare" type="button" class="secondary">Plot convergence</button></div>
+</form><p id="message" class="message" aria-live="polite"></p></section>
+<section id="results" hidden><div class="stats" id="prices"></div><article class="greeks"><h2>Black–Scholes–Merton Greeks</h2><div class="stats" id="greek-values"></div></article><article id="comparison-card" class="chart-card" hidden><h2>Monte Carlo price vs. simulation count</h2><canvas id="comparison-chart"></canvas></article></section>
+<script src="{{ url_for('static', filename='options.js') }}"></script>
+{% endblock %}
