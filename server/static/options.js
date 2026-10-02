@@ -1,5 +1,5 @@
 let comparisonChart;
-loadStocks();
+loadStocks().then(() => initStockSearch('#stock-search'));
 // Datalist value is "AAPL – Apple Inc. (S&P 500)"; strip everything after " – ".
 const ticker = () => document.querySelector('#stock-search').value.split(' – ')[0].trim();
 const formValues = () => ({

@@ -4,7 +4,7 @@ const stockSearch = document.querySelector('#stock-search');
 const weightRows  = document.querySelector('#weight-rows');
 const weightSumMsg = document.querySelector('#weight-sum-msg');
 
-loadStocks();
+loadStocks().then(() => initStockSearch('#stock-search'));
 
 // Add stock chip + weight row
 document.querySelector('#add-stock').addEventListener('click', addStock);

@@ -15,11 +15,10 @@
       <label style="grid-column:1/-1">
         Stocks
         <div style="display:flex;gap:8px">
-          <input id="stock-search" list="stocks" placeholder="Search Apple or AAPL" autocomplete="off" style="flex:1">
-          <datalist id="stocks"></datalist>
+          <input id="stock-search" placeholder="Search Apple or AAPL" autocomplete="off" style="flex:1">
+          <datalist id="stocks" class="stock-datalist"></datalist>
           <button type="button" id="add-stock" class="secondary" style="white-space:nowrap">Add stock</button>
         </div>
-        <small id="catalog-status">Loading stock catalogue…</small>
       </label>
 
       <!-- Dynamic weight rows inserted here -->

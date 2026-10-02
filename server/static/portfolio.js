@@ -6,7 +6,7 @@ const selectedDiv = document.querySelector('#selected-stocks');
 const reqReturnSlider = document.querySelector('#req-return');
 const reqReturnOutput = document.querySelector('#req-return-output');
 
-loadStocks();
+loadStocks().then(() => initStockSearch('#stock-search'));
 
 reqReturnSlider.addEventListener('input', () => {
   reqReturnOutput.value = `${reqReturnSlider.value}%`;
