@@ -1,49 +1,61 @@
 {% extends "base.html" %}
-{% block title %}Portfolio optimisation · QuantLab{% endblock %}
+{% block title %}Portfolio Optimisation · QuantLab{% endblock %}
 {% block content %}
-<section class="intro">
-  <p class="eyebrow">Markowitz mean-variance theory</p>
-  <h1>Optimise a portfolio</h1>
-  <p>Find the minimum-variance allocation for a required annual return. Toggle short selling to permit negative positions.</p>
-</section>
 
-<section class="panel">
+<div class="intro">
+  <div class="intro-inner">
+    <div>
+      <p class="eyebrow">Markowitz mean-variance</p>
+      <h1>Portfolio optimisation</h1>
+      <p>Find the minimum-variance allocation for a target annual return. Enable short selling to allow negative positions.</p>
+    </div>
+    <div class="intro-meta">
+      Minimum variance<br>
+      Long-only or short<br>
+      Multi-asset
+    </div>
+  </div>
+</div>
+
+<div class="panel">
   <form id="portfolio-form">
     <div class="form-grid">
-      <label style="grid-column:1/-1">
-        Stocks
+
+      <label style="grid-column:1/-1">Add stocks to portfolio
         <div style="display:flex;gap:8px">
-          <input id="stock-search" placeholder="Search Apple or AAPL" autocomplete="off" style="flex:1">
+          <input id="stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" style="flex:1">
           <datalist id="stocks" class="stock-datalist"></datalist>
-          <button type="button" id="add-stock" class="secondary" style="white-space:nowrap">Add stock</button>
+          <button type="button" id="add-stock" class="secondary">Add</button>
         </div>
       </label>
 
-      <label>Budget (USD) <input id="budget" type="number" min="1" step="100" value="10000" required></label>
+      <label>Budget (USD)
+        <input id="budget" type="number" min="1" step="100" value="10000" required>
+      </label>
 
-      <label>
-        Required annual return: <output id="req-return-output">10%</output>
+      <label>Required annual return&ensp;<output id="req-return-output" style="text-transform:none;letter-spacing:0">10%</output>
         <input id="req-return" type="range" min="1" max="100" step="1" value="10">
       </label>
 
-      <label style="display:flex;align-items:center;gap:10px;padding-top:20px">
-        <input id="allow-short" type="checkbox" style="width:auto;accent-color:var(--accent)">
+      <label style="display:flex;align-items:center;gap:10px;padding-top:22px;text-transform:none;letter-spacing:0;font-size:.8rem">
+        <input id="allow-short" type="checkbox">
         Allow short selling
       </label>
+
     </div>
 
-    <!-- Selected stocks list -->
-    <div id="selected-stocks" style="margin:18px 0;display:flex;flex-wrap:wrap;gap:8px"></div>
+    <!-- Selected stocks chips -->
+    <div id="selected-stocks" style="margin:var(--gap-md) 0;display:flex;flex-wrap:wrap;gap:var(--gap-xs)"></div>
 
-    <div class="actions" style="margin-top:8px">
+    <div class="actions">
       <button type="submit">Optimise portfolio</button>
     </div>
   </form>
   <p id="message" class="message" aria-live="polite"></p>
-</section>
+</div>
 
 <section id="results" hidden>
-  <h2 style="margin-bottom:14px">Recommended allocation</h2>
+  <h2>Recommended allocation</h2>
   <div id="allocation-grid" class="stats"></div>
 </section>
 

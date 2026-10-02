@@ -50,22 +50,20 @@ function render(data) {
 
   // --- Interpretive percentile messages ---
   document.querySelector('#interpretations').innerHTML = `
-    <div class="stat" style="border-left:3px solid var(--accent2)">
+    <div class="stat" style="border-top:2px solid var(--accent)">
       <span>5th percentile</span>
-      <strong style="font-size:1rem;margin-top:5px">${money(data.summary.p05)}</strong>
-      <p style="color:var(--muted);font-size:.82rem;margin:.5rem 0 0">
-        The price of ${data.ticker} went lower than
-        <strong style="color:var(--text)">${money(data.summary.p05)}</strong>
-        in less than 5% of the simulations.
+      <strong style="font-size:.95rem;margin-top:5px;color:var(--accent)">${money(data.summary.p05)}</strong>
+      <p style="color:var(--text-dim);font-size:.8rem;margin:.5rem 0 0;max-width:none">
+        ${data.ticker} went below <strong style="color:var(--text);font-family:var(--mono)">${money(data.summary.p05)}</strong>
+        in less than 5% of simulations.
       </p>
     </div>
-    <div class="stat" style="border-left:3px solid var(--accent)">
+    <div class="stat" style="border-top:2px solid var(--text-dim)">
       <span>95th percentile</span>
-      <strong style="font-size:1rem;margin-top:5px">${money(data.summary.p95)}</strong>
-      <p style="color:var(--muted);font-size:.82rem;margin:.5rem 0 0">
-        The price of ${data.ticker} went above
-        <strong style="color:var(--text)">${money(data.summary.p95)}</strong>
-        in less than 5% of the simulations.
+      <strong style="font-size:.95rem;margin-top:5px;color:var(--text)">${money(data.summary.p95)}</strong>
+      <p style="color:var(--text-dim);font-size:.8rem;margin:.5rem 0 0;max-width:none">
+        ${data.ticker} exceeded <strong style="color:var(--text);font-family:var(--mono)">${money(data.summary.p95)}</strong>
+        in less than 5% of simulations.
       </p>
     </div>`;
 
@@ -79,7 +77,7 @@ function render(data) {
     type: 'bar',
     data: {
       labels,
-      datasets: [{ label: 'Price range', data: data.histogram.frequencies, backgroundColor: '#56d4bb', borderRadius: 3 }],
+      datasets: [{ label: 'Price range', data: data.histogram.frequencies, backgroundColor: '#41c9a0', borderRadius: 0, borderSkipped: false }],
     },
     options: {
       plugins: {
@@ -104,7 +102,7 @@ function render(data) {
     const dt = new Date(d);
     return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
   });
-  const colors = ['#56d4bb','#75a7ff','#fdba74','#f0abfc','#a3e635','#fca5a5','#67e8f9'];
+  const colors = ['#41c9a0','#6b9fff','#f0a855','#c77dff','#7ae582','#e05c5c','#4dd9e8','#a8b2c0'];
   pathsChart?.destroy();
   pathsChart = new Chart(document.querySelector('#paths-chart'), {
     type: 'line',

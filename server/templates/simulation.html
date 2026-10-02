@@ -1,40 +1,74 @@
 {% extends "base.html" %}
-{% block title %}Stock simulation · QuantLab{% endblock %}
+{% block title %}Stock Simulation · QuantLab{% endblock %}
 {% block content %}
-<section class="intro"><p class="eyebrow">Geometric Brownian motion</p><h1>Simulate a stock's future price</h1><p>Explore distributions and possible price paths using the stock's historical return and volatility.</p></section>
 
-<section class="panel"><form id="simulation-form" class="form-grid">
-  <label>Stock
-    <input id="stock-search" required placeholder="Search Apple or AAPL" autocomplete="off">
-    <datalist id="stocks" class="stock-datalist"></datalist>
-  </label>
-  <label>Time horizon <select id="horizon"><option value="1w">1 week</option><option value="1m" selected>1 month</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="1y">1 year</option></select></label>
-  <label>Simulations <input id="num-sim" type="number" min="10000" max="1000000" step="10000" value="10000" required></label>
-  <label>Paths displayed <input id="path-count" type="range" min="1" max="100" value="20"><output id="path-count-output">20</output></label>
-  <button type="submit">Run simulation</button>
-</form><p id="message" class="message" aria-live="polite"></p></section>
+<div class="intro">
+  <div class="intro-inner">
+    <div>
+      <p class="eyebrow">GBM / Monte Carlo</p>
+      <h1>Stock price simulation</h1>
+      <p>Simulate future price distributions and paths using historical return and volatility via geometric Brownian motion.</p>
+    </div>
+    <div class="intro-meta">
+      S&amp;P 500 &amp; Nifty 50<br>
+      10k – 1M simulations<br>
+      Up to 100 paths
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <form id="simulation-form" class="form-grid">
+    <label>Underlying stock
+      <input id="stock-search" required placeholder="AAPL or Apple Inc." autocomplete="off">
+      <datalist id="stocks" class="stock-datalist"></datalist>
+    </label>
+    <label>Time horizon
+      <select id="horizon">
+        <option value="1w">1 week</option>
+        <option value="1m" selected>1 month</option>
+        <option value="3m">3 months</option>
+        <option value="6m">6 months</option>
+        <option value="1y">1 year</option>
+      </select>
+    </label>
+    <label>Simulations
+      <input id="num-sim" type="number" min="10000" max="1000000" step="10000" value="10000" required>
+    </label>
+    <label>Paths to display&ensp;<output id="path-count-output" style="text-transform:none;letter-spacing:0">20</output>
+      <input id="path-count" type="range" min="1" max="100" value="20">
+    </label>
+    <div style="display:flex;align-items:flex-end">
+      <button type="submit">Run simulation</button>
+    </div>
+  </form>
+  <p id="message" class="message" aria-live="polite"></p>
+</div>
 
 <section id="results" hidden>
-  <!-- Company header with logo -->
-  <div id="result-header" style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+
+  <div class="result-header" id="result-header">
     <div id="stock-logo"></div>
     <div>
-      <h2 id="result-title" style="margin:0;font-size:1.4rem"></h2>
-      <p id="result-subtitle" style="margin:0;color:var(--muted);font-size:.85rem"></p>
+      <h2 id="result-title" style="font-size:1.1rem;font-weight:600;letter-spacing:-.01em;text-transform:none;color:var(--text)"></h2>
+      <p id="result-subtitle" style="font-size:.72rem;font-family:var(--mono);color:var(--text-faint);margin:.2rem 0 0;max-width:none"></p>
     </div>
   </div>
 
-  <!-- Mean & median stat cards -->
-  <div class="stats" id="stats" style="margin-bottom:16px"></div>
+  <div class="stats" id="stats"></div>
+  <div id="interpretations" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:var(--gap-lg)"></div>
 
-  <!-- Interpretive percentile messages -->
-  <div id="interpretations" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px"></div>
-
-  <!-- Full-width charts, stacked vertically -->
-  <div style="display:grid;grid-template-columns:1fr;gap:24px">
-    <article class="chart-card"><h2>Terminal-price distribution</h2><canvas id="terminal-chart" style="max-height:480px"></canvas></article>
-    <article class="chart-card"><h2>Simulated paths</h2><canvas id="paths-chart" style="max-height:480px"></canvas></article>
+  <div class="chart-grid">
+    <article class="chart-card">
+      <h2>Terminal-price distribution</h2>
+      <canvas id="terminal-chart"></canvas>
+    </article>
+    <article class="chart-card">
+      <h2>Simulated price paths</h2>
+      <canvas id="paths-chart"></canvas>
+    </article>
   </div>
+
 </section>
 <script src="{{ url_for('static', filename='simulation.js') }}"></script>
 {% endblock %}
