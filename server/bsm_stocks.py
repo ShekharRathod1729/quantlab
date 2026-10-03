@@ -69,3 +69,24 @@ def price_option_bsm(
     "rho" : rho, 
     "vega" : vega
   }
+
+def bsm_price_vs_strike(ticker_symb, strike, horizon, opt_type):
+    if not (opt_type == "call" or opt_type == "put"):
+        raise ValueError("opt_type must be 'call' or 'put'.")
+        
+    ticker = yf.Ticker(ticker_symb)
+
+    S0 = ticker.history(period="1d")["Close"].iloc[-1]
+    T = HORIZONS[horizon] / 252
+    r = utils.calc_r(T)
+    sigma = utils.volatility(ticker)
+
+    strikes = np.linspace(max(strike - 20, 0), strike + 20, 100)
+    if opt_type == "cal":
+        opt_vals = np.array([bsm.bsm_call(S0, strike, r, sigma, T) for strike in strikes])
+    else:
+        opt_vals = np.array([bsm.bsm_put(S0, strike, r, sigma, T) for strike in strikes])
+
+    return 
+    
+    
