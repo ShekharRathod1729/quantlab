@@ -162,6 +162,11 @@ header {
   border-right: 1px solid var(--border);
 }
 
+.header-auth .brand {
+  border-right: none;
+  padding-right: 0;
+}
+
 nav {
   display: flex;
   align-items: stretch;
@@ -614,6 +619,38 @@ section#results > h2 {
   padding: 0 28px;
 }
 
+/* Sensitivity 2×2 grid */
+.sensitivity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: var(--gap-lg);
+}
+
+.sensitivity-grid .chart-card {
+  border: none !important;
+}
+
+/* Section headings for sensitivity & terminal */
+#sensitivity-section > h2,
+#terminal-section > h2 {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--gap-sm);
+  margin-bottom: var(--gap-lg);
+}
+
+#sensitivity-section,
+#terminal-section {
+  margin-bottom: var(--gap-xl);
+}
+
 /* ── 24. ALLOCATION TABLE ─────────────────────────────────── */
 #allocation-grid .stat strong {
   color: var(--accent);
@@ -641,13 +678,359 @@ section#results > h2 {
   margin-bottom: var(--gap-md);
 }
 
-/* ── 26. SCROLLBAR ───────────────────────────────────────── */
+/* ── 26. AUTH NAV ────────────────────────────────────────── */
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.auth-user {
+  font-size: .72rem;
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .04em;
+}
+
+.auth-link {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-decoration: none;
+  transition: color .15s;
+}
+
+.auth-link:hover { color: var(--text-dim); }
+
+.auth-link-register {
+  padding: 4px 14px;
+  border: 1px solid var(--border-2);
+  transition: border-color .15s, color .15s;
+}
+
+.auth-link-register:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── 27. FLASH MESSAGES ─────────────────────────────────── */
+
+.flash-bar {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--gap-sm) var(--col-pad);
+}
+
+.flash {
+  padding: var(--gap-sm) var(--gap-md);
+  font-size: .82rem;
+  font-family: var(--mono);
+  border-left: 3px solid var(--border-2);
+  background: var(--surface-2);
+  color: var(--text-dim);
+  margin-bottom: var(--gap-xs);
+}
+
+.flash-error {
+  border-left-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-dim);
+}
+
+.flash-success {
+  border-left-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.flash-info {
+  border-left-color: #6b9fff;
+  color: #6b9fff;
+  background: rgba(107,159,255,.1);
+}
+
+/* ── 28. AUTH PAGES (login / register) ──────────────────── */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: var(--gap-xl);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding: var(--gap-lg) 0;
+}
+
+.auth-header {
+  margin-bottom: var(--gap-lg);
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--gap-md);
+}
+
+.auth-form button[type=submit] {
+  margin-top: var(--gap-sm);
+  width: 100%;
+  background: var(--accent);
+  color: #041510;
+  border-color: var(--accent);
+}
+
+.auth-form button[type=submit]:hover {
+  background: #4de0b4;
+  border-color: #4de0b4;
+}
+
+.remember-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px;
+  font-size: .8rem !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.auth-footer {
+  margin-top: var(--gap-lg);
+  text-align: center;
+  font-size: .82rem;
+  color: var(--text-faint);
+}
+
+.auth-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── 28b. PORTFOLIO MANAGEMENT & DATA TABLES ──────────────── */
+
+.section-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-md);
+  flex-wrap: wrap;
+}
+
+.section-subtitle {
+  font-size: .8rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: .75rem;
+  line-height: normal;
+}
+
+.table-container {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+  text-align: left;
+}
+
+.data-table th {
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover td {
+  background: rgba(255, 255, 255, .015);
+}
+
+.asset-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.asset-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-symbol {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: .88rem;
+  color: var(--text);
+}
+
+.asset-name {
+  font-size: .72rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.num-cell {
+  font-family: var(--mono);
+  font-size: .84rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.weight-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: .8rem;
+}
+
+.weight-bar-bg {
+  width: 48px;
+  height: 4px;
+  background: var(--border-2);
+  overflow: hidden;
+}
+
+.weight-bar-fill {
+  height: 100%;
+  background: var(--accent);
+}
+
+.pnl-pos {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-weight: 600;
+}
+
+.pnl-neg {
+  color: var(--danger);
+  font-family: var(--mono);
+  font-weight: 600;
+}
+
+.action-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 4px 8px;
+  font-size: .72rem;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: var(--mono);
+  height: auto;
+}
+
+.btn-icon:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.btn-icon-del:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-dim);
+}
+
+/* ── 28c. MODALS ────────────────────────────────────────── */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 12, .75);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--col-pad);
+}
+
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--gap-lg);
+  max-width: 420px;
+  width: 100%;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--gap-sm);
+}
+
+/* ── 29. SCROLLBAR ───────────────────────────────────────── */
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-2); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
-/* ── 27. RESPONSIVE ──────────────────────────────────────── */
+/* ── 30. RESPONSIVE ──────────────────────────────────────── */
 @media (max-width: 900px) {
   :root { --col-pad: 20px; }
   canvas { max-height: 320px; }
@@ -656,12 +1039,15 @@ section#results > h2 {
 @media (max-width: 640px) {
   :root { --col-pad: 16px; --gap-xl: 36px; }
   h1 { font-size: 1.5rem; }
-  .header-inner { gap: var(--gap-md); }
+  .header-inner { gap: var(--gap-md); flex-wrap: wrap; }
   .brand { padding-right: var(--gap-md); }
   nav a { padding: 0 12px; font-size: .65rem; }
   .form-grid { grid-template-columns: 1fr; }
   .intro-inner { grid-template-columns: 1fr; }
   .intro-meta { text-align: left; }
+  .sensitivity-grid { grid-template-columns: 1fr; }
+  .auth-nav { width: 100%; justify-content: flex-end; }
+  .auth-card { padding: var(--gap-lg) var(--gap-sm); }
   canvas { max-height: 260px; }
 }
 
@@ -669,3 +1055,4 @@ section#results > h2 {
   nav { gap: 0; }
   nav a { padding: 0 8px; letter-spacing: .05em; }
 }
+

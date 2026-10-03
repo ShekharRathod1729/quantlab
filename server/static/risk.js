@@ -22,20 +22,22 @@ function addStock() {
   renderWeightRows();
 }
 
-function renderWeightRows() {
+function renderWeightRows(customWeights = null) {
   const equal = selected.size ? (100 / selected.size).toFixed(1) : 0;
-  weightRows.innerHTML = [...selected.entries()].map(([ticker, label]) => `
+  weightRows.innerHTML = [...selected.entries()].map(([ticker, label]) => {
+    const val = (customWeights && customWeights[ticker] != null) ? Number(customWeights[ticker]).toFixed(1) : equal;
+    return `
     <label>
       ${ticker} weight (%)
       <div style="display:flex;gap:6px;align-items:center">
         <input class="weight-input" data-ticker="${ticker}" type="number"
-               min="0" max="100" step="0.1" value="${equal}" style="flex:1">
+               min="0" max="100" step="0.1" value="${val}" style="flex:1">
         <button type="button" class="remove-btn secondary"
                 data-ticker="${ticker}"
                 style="min-height:unset;padding:8px 10px">✕</button>
       </div>
-    </label>`
-  ).join('');
+    </label>`;
+  }).join('');
 
   weightRows.querySelectorAll('.remove-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -50,6 +52,58 @@ function renderWeightRows() {
 
   checkWeightSum();
 }
+
+function applyPortfolioData(items, portfolioValue) {
+  if (!items || items.length === 0) return;
+  selected.clear();
+  const weights = {};
+  items.forEach(item => {
+    selected.set(item.ticker, item.name ? `${item.ticker} – ${item.name}` : item.ticker);
+    weights[item.ticker] = item.weight != null ? item.weight : (100 / items.length);
+  });
+  if (portfolioValue && portfolioValue > 0) {
+    document.querySelector('#portfolio-value').value = Math.round(portfolioValue);
+  }
+  renderWeightRows(weights);
+}
+
+// Check localStorage from Portfolio navigation
+try {
+  const savedRisk = localStorage.getItem('quantlab_portfolio_risk');
+  if (savedRisk) {
+    localStorage.removeItem('quantlab_portfolio_risk');
+    const parsed = JSON.parse(savedRisk);
+    if (parsed.tickers && parsed.weights) {
+      const items = parsed.tickers.map((t, idx) => ({
+        ticker: t,
+        weight: (parsed.weights[idx] || 0) * 100,
+      }));
+      applyPortfolioData(items, parsed.portfolioValue);
+    }
+  }
+} catch (_) {}
+
+// Wire Import my portfolio button
+document.querySelector('#import-portfolio-risk-btn')?.addEventListener('click', async () => {
+  const btn = document.querySelector('#import-portfolio-risk-btn');
+  btn.disabled = true;
+  btn.textContent = 'Importing…';
+  try {
+    const res = await fetch('/api/portfolio/holdings');
+    if (!res.ok) throw new Error('Please log in or add holdings first.');
+    const data = await res.json();
+    if (!data.holdings || data.holdings.length === 0) {
+      alert('You have no saved holdings in your portfolio yet.');
+      return;
+    }
+    applyPortfolioData(data.holdings, data.totalValue);
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚡ Import my portfolio';
+  }
+});
 
 function getWeights() {
   return [...weightRows.querySelectorAll('.weight-input')].map(inp => parseFloat(inp.value) / 100);

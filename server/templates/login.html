@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Log in · QuantLab{% endblock %}
+{% block content %}
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <p class="eyebrow">Welcome back</p>
+      <h1>Log in</h1>
+      <p>Enter your credentials to access your QuantLab account.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, msg in messages %}
+      <div class="flash flash-{{ category }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="post" class="auth-form">
+      <label>Username or email
+        <input id="identifier" name="identifier" type="text" required placeholder="username or email" autocomplete="username" autofocus>
+      </label>
+      <label>Password
+        <input id="password" name="password" type="password" required placeholder="••••••••" autocomplete="current-password">
+      </label>
+      <label class="remember-label">
+        <input name="remember" type="checkbox"> Remember me
+      </label>
+      <button type="submit">Log in</button>
+    </form>
+
+    <p class="auth-footer">Don't have an account? <a href="/register">Create one</a></p>
+  </div>
+</div>
+
+{% endblock %}

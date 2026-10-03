@@ -13,16 +13,43 @@
 </head>
 <body>
   <header>
-    <div class="header-inner">
+    <div class="header-inner{% if request.path.rstrip('/') in ['/login', '/register'] %} header-auth{% endif %}">
       <a class="brand" href="/">QuantLab</a>
+      {% if request.path.rstrip('/') not in ['/login', '/register'] %}
       <nav>
         <a href="/"        {% if request.path == '/'         %}class="active"{% endif %}>Stock simulation</a>
         <a href="/options" {% if request.path == '/options'  %}class="active"{% endif %}>Option pricing</a>
         <a href="/portfolio"{% if request.path == '/portfolio'%}class="active"{% endif %}>Portfolio</a>
         <a href="/risk"    {% if request.path == '/risk'     %}class="active"{% endif %}>Risk analytics</a>
       </nav>
+      {% endif %}
+      <div class="auth-nav">
+        {% if current_user.is_authenticated %}
+          <span class="auth-user">{{ current_user.username }}</span>
+          <a href="/logout" class="auth-link">Log out</a>
+        {% elif request.path.rstrip('/') == '/login' %}
+          <a href="/register" class="auth-link auth-link-register">Sign up</a>
+        {% elif request.path.rstrip('/') == '/register' %}
+          <a href="/login" class="auth-link">Log in</a>
+        {% else %}
+          <a href="/login"    class="auth-link">Log in</a>
+          <a href="/register" class="auth-link auth-link-register">Sign up</a>
+        {% endif %}
+      </div>
     </div>
   </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-bar">
+    {% for category, msg in messages %}
+    <div class="flash flash-{{ category }}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
   <main>{% block content %}{% endblock %}</main>
 </body>
 </html>
+

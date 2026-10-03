@@ -1,63 +1,200 @@
 {% extends "base.html" %}
-{% block title %}Portfolio Optimisation · QuantLab{% endblock %}
+{% block title %}Portfolio Management · QuantLab{% endblock %}
 {% block content %}
 
 <div class="intro">
   <div class="intro-inner">
     <div>
-      <p class="eyebrow">Markowitz mean-variance</p>
-      <h1>Portfolio optimisation</h1>
-      <p>Find the minimum-variance allocation for a target annual return. Enable short selling to allow negative positions.</p>
+      <p class="eyebrow">User platform · Markowitz</p>
+      <h1>Portfolio management</h1>
+      <p>Manage your real holdings, track live market valuations and P&L, then find the optimal mean-variance asset allocation for your target return.</p>
     </div>
     <div class="intro-meta">
-      Minimum variance<br>
-      Long-only or short<br>
-      Multi-asset
+      Live valuation<br>
+      P&amp;L tracking<br>
+      Markowitz optimal
     </div>
   </div>
 </div>
 
-<div class="panel">
-  <form id="portfolio-form">
-    <div class="form-grid">
+<!-- ============================================================
+     SECTION 1: USER'S ACTIVE PORTFOLIO
+     ============================================================ -->
+<section id="portfolio-manager" class="portfolio-section">
+  <div class="section-header-row">
+    <div>
+      <h2>My Portfolio Holdings</h2>
+      <p class="section-subtitle">Real-time valuation based on latest market prices and your purchase cost basis.</p>
+    </div>
+    <div class="section-actions">
+      <button type="button" id="toggle-add-btn" class="secondary" style="font-size:0.75rem">+ Add position</button>
+      <button type="button" id="load-to-markowitz-btn" class="secondary" style="font-size:0.75rem">⚡ Optimise in Markowitz</button>
+      <a href="/risk" id="analyze-risk-btn" class="secondary btn-link" style="font-size:0.75rem">📊 Analyze Risk</a>
+      <button type="button" id="refresh-holdings-btn" class="secondary" style="font-size:0.75rem" title="Refresh live market prices">↻ Refresh</button>
+    </div>
+  </div>
 
-      <label style="grid-column:1/-1">Add stocks to portfolio
-        <div style="display:flex;gap:8px">
-          <input id="stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" style="flex:1">
+  <!-- Portfolio KPI Summary Cards -->
+  <div id="portfolio-kpis" class="stats" style="margin-bottom:var(--gap-md)">
+    <div class="stat">
+      <span>Portfolio value</span>
+      <strong id="kpi-total-value">$0.00</strong>
+    </div>
+    <div class="stat">
+      <span>Total cost basis</span>
+      <strong id="kpi-total-cost">$0.00</strong>
+    </div>
+    <div class="stat">
+      <span>Unrealised P&amp;L</span>
+      <strong id="kpi-total-pnl">$0.00 (0.00%)</strong>
+    </div>
+    <div class="stat">
+      <span>Active positions</span>
+      <strong id="kpi-holdings-count">0</strong>
+    </div>
+  </div>
+
+  <!-- Add Holding Form (Collapsible/Toggleable) -->
+  <div id="add-holding-panel" class="panel" style="margin-bottom:var(--gap-md);display:none;">
+    <h3 style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin-bottom:var(--gap-sm)">Add stock position</h3>
+    <form id="add-holding-form">
+      <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr auto; align-items:end;">
+        <label>Stock ticker or company
+          <input id="holding-stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" required>
           <datalist id="stocks" class="stock-datalist"></datalist>
-          <button type="button" id="add-stock" class="secondary">Add</button>
+        </label>
+        <label>Shares (units)
+          <input id="holding-shares" type="number" step="any" min="0.0001" placeholder="e.g. 10" required>
+        </label>
+        <label>Avg buy price (USD)
+          <input id="holding-buy-price" type="number" step="any" min="0.01" placeholder="Market price">
+        </label>
+        <div>
+          <button type="submit" style="width:100%">Add position</button>
         </div>
-      </label>
+      </div>
+    </form>
+    <p id="add-holding-msg" class="message" aria-live="polite" style="margin-top:var(--gap-xs)"></p>
+  </div>
 
-      <label>Budget (USD)
-        <input id="budget" type="number" min="1" step="100" value="10000" required>
-      </label>
-
-      <label>Required annual return&ensp;<output id="req-return-output" style="text-transform:none;letter-spacing:0">10%</output>
-        <input id="req-return" type="range" min="1" max="100" step="1" value="10">
-      </label>
-
-      <label style="display:flex;align-items:center;gap:10px;padding-top:22px;text-transform:none;letter-spacing:0;font-size:.8rem">
-        <input id="allow-short" type="checkbox">
-        Allow short selling
-      </label>
-
-    </div>
-
-    <!-- Selected stocks chips -->
-    <div id="selected-stocks" style="margin:var(--gap-md) 0;display:flex;flex-wrap:wrap;gap:var(--gap-xs)"></div>
-
-    <div class="actions">
-      <button type="submit">Optimise portfolio</button>
-    </div>
-  </form>
-  <p id="message" class="message" aria-live="polite"></p>
-</div>
-
-<section id="results" hidden>
-  <h2>Recommended allocation</h2>
-  <div id="allocation-grid" class="stats"></div>
+  <!-- Holdings Data Table -->
+  <div class="table-container panel" style="padding:0;overflow-x:auto;">
+    <table class="data-table" id="holdings-table">
+      <thead>
+        <tr>
+          <th>Asset</th>
+          <th style="text-align:right">Shares</th>
+          <th style="text-align:right">Avg Cost</th>
+          <th style="text-align:right">Market Price</th>
+          <th style="text-align:right">Market Value</th>
+          <th style="text-align:right;width:140px">Weight</th>
+          <th style="text-align:right">Unrealised P&amp;L</th>
+          <th style="text-align:center;width:90px">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="holdings-tbody">
+        <tr>
+          <td colspan="8" style="text-align:center;padding:var(--gap-lg);color:var(--text-dim)">
+            Loading your portfolio holdings…
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p id="portfolio-status-msg" class="message" aria-live="polite" style="margin-top:var(--gap-xs)"></p>
 </section>
+
+<!-- ============================================================
+     SECTION 2: MARKOWITZ MEAN-VARIANCE OPTIMISER
+     ============================================================ -->
+<section id="optimiser-section" class="portfolio-section" style="margin-top:var(--gap-xl);padding-top:var(--gap-lg);border-top:1px solid var(--border)">
+  <div class="section-header-row">
+    <div>
+      <h2>Markowitz Mean-Variance Optimiser</h2>
+      <p class="section-subtitle">Compute the mathematical minimum-variance portfolio allocation for a required annual rate of return.</p>
+    </div>
+    <div>
+      <button type="button" id="import-holdings-btn" class="secondary" style="font-size:0.75rem">⚡ Import my portfolio stocks</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <form id="portfolio-form">
+      <div class="form-grid">
+
+        <label style="grid-column:1/-1">Add stocks to basket
+          <div style="display:flex;gap:8px">
+            <input id="stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" style="flex:1">
+            <button type="button" id="add-stock" class="secondary">Add</button>
+          </div>
+        </label>
+
+        <label>Investment budget (USD)
+          <input id="budget" type="number" min="1" step="100" value="10000" required>
+        </label>
+
+        <label>Required annual return&ensp;<output id="req-return-output" style="text-transform:none;letter-spacing:0">10%</output>
+          <input id="req-return" type="range" min="1" max="100" step="1" value="10">
+        </label>
+
+        <label style="display:flex;align-items:center;gap:10px;padding-top:22px;text-transform:none;letter-spacing:0;font-size:.8rem">
+          <input id="allow-short" type="checkbox">
+          Allow short selling
+        </label>
+
+      </div>
+
+      <!-- Selected stocks chips -->
+      <div id="selected-stocks" style="margin:var(--gap-md) 0;display:flex;flex-wrap:wrap;gap:var(--gap-xs)"></div>
+
+      <div class="actions">
+        <button type="submit">Optimise portfolio</button>
+      </div>
+    </form>
+    <p id="message" class="message" aria-live="polite"></p>
+  </div>
+
+  <!-- Markowitz Results Section -->
+  <section id="results" hidden style="margin-top:var(--gap-lg)">
+    <div class="section-header-row" style="margin-bottom:var(--gap-sm)">
+      <h2>Recommended asset allocation</h2>
+      <div style="display:flex;gap:var(--gap-sm)">
+        <button type="button" id="apply-replace-btn" class="secondary" style="font-size:0.75rem">💾 Save as my new portfolio</button>
+        <button type="button" id="apply-add-btn" class="secondary" style="font-size:0.75rem">+ Add to my portfolio</button>
+      </div>
+    </div>
+    <div id="allocation-grid" class="stats"></div>
+    <p id="save-allocation-msg" class="message" style="margin-top:var(--gap-xs)"></p>
+  </section>
+</section>
+
+<!-- ============================================================
+     EDIT HOLDING MODAL
+     ============================================================ -->
+<div id="edit-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size:0.88rem;font-weight:700;letter-spacing:-0.01em">Edit Position — <span id="modal-ticker" style="color:var(--accent);font-family:var(--mono)"></span></h3>
+      <button type="button" id="close-modal-btn" class="btn-icon" aria-label="Close">✕</button>
+    </div>
+    <form id="edit-holding-form">
+      <input type="hidden" id="edit-holding-id">
+      <div style="display:flex;flex-direction:column;gap:var(--gap-sm);margin:var(--gap-md) 0">
+        <label>Shares (units)
+          <input id="edit-shares" type="number" step="any" min="0.0001" required>
+        </label>
+        <label>Avg buy price (USD)
+          <input id="edit-buy-price" type="number" step="any" min="0.01" required>
+        </label>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:var(--gap-sm)">
+        <button type="button" id="cancel-edit-btn" class="secondary">Cancel</button>
+        <button type="submit">Update position</button>
+      </div>
+    </form>
+    <p id="edit-msg" class="message" style="margin-top:var(--gap-xs)"></p>
+  </div>
+</div>
 
 <script src="{{ url_for('static', filename='portfolio.js') }}"></script>
 {% endblock %}

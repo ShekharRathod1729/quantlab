@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Create account · QuantLab{% endblock %}
+{% block content %}
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <p class="eyebrow">Get started</p>
+      <h1>Create account</h1>
+      <p>Sign up to manage your portfolio and access all QuantLab features.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, msg in messages %}
+      <div class="flash flash-{{ category }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="post" class="auth-form">
+      <label>Username
+        <input id="username" name="username" type="text" required minlength="3" maxlength="40"
+               placeholder="e.g. quanttrader" autocomplete="username" autofocus
+               value="{{ request.form.get('username', '') }}">
+      </label>
+      <label>Email
+        <input id="email" name="email" type="email" required
+               placeholder="you@example.com" autocomplete="email"
+               value="{{ request.form.get('email', '') }}">
+      </label>
+      <label>Password
+        <input id="password" name="password" type="password" required minlength="8"
+               placeholder="At least 8 characters" autocomplete="new-password">
+      </label>
+      <label>Confirm password
+        <input id="confirm" name="confirm" type="password" required minlength="8"
+               placeholder="Re-enter your password" autocomplete="new-password">
+      </label>
+      <button type="submit">Create account</button>
+    </form>
+
+    <p class="auth-footer">Already have an account? <a href="/login">Log in</a></p>
+  </div>
+</div>
+
+{% endblock %}

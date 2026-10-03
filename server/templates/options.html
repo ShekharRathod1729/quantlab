@@ -7,12 +7,13 @@
     <div>
       <p class="eyebrow">European options</p>
       <h1>Option pricing</h1>
-      <p>Price European options with the Black–Scholes–Merton closed-form formula and compare against Monte Carlo simulation.</p>
+      <p>Price European options with the Black–Scholes–Merton closed-form formula, explore parameter sensitivity, and examine the underlying stock's simulated terminal-price distribution.</p>
     </div>
     <div class="intro-meta">
       BSM analytical<br>
+      Sensitivity analysis<br>
       Monte Carlo<br>
-      Convergence analysis
+      Terminal distribution
     </div>
   </div>
 </div>
@@ -44,6 +45,16 @@
     <label>Monte Carlo simulations
       <input id="num-sim" type="number" min="10000" max="1000000" step="10000" value="10000" required>
     </label>
+    <label>Terminal simulations
+      <select id="terminal-sim">
+        <option value="10000">10,000</option>
+        <option value="50000" selected>50,000</option>
+        <option value="100000">100,000</option>
+        <option value="250000">250,000</option>
+        <option value="500000">500,000</option>
+        <option value="1000000">1,000,000</option>
+      </select>
+    </label>
   </form>
 
   <!-- Action row separated from inputs -->
@@ -71,5 +82,39 @@
   </article>
 
 </section>
+
+<!-- Parameter sensitivity charts -->
+<section id="sensitivity-section" hidden>
+  <h2>Parameter Sensitivity</h2>
+  <div class="sensitivity-grid">
+    <article class="chart-card" style="border:1px solid var(--border)">
+      <h2>Option price vs. strike price</h2>
+      <canvas id="chart-vs-strike"></canvas>
+    </article>
+    <article class="chart-card" style="border:1px solid var(--border)">
+      <h2>Option price vs. time to maturity</h2>
+      <canvas id="chart-vs-time"></canvas>
+    </article>
+    <article class="chart-card" style="border:1px solid var(--border)">
+      <h2>Option price vs. risk-free rate</h2>
+      <canvas id="chart-vs-rate"></canvas>
+    </article>
+    <article class="chart-card" style="border:1px solid var(--border)">
+      <h2>Option price vs. volatility</h2>
+      <canvas id="chart-vs-vol"></canvas>
+    </article>
+  </div>
+</section>
+
+<!-- Terminal-price distribution -->
+<section id="terminal-section" hidden>
+  <h2>Underlying stock terminal-price distribution</h2>
+  <div class="stats" id="terminal-stats"></div>
+  <article class="chart-card" style="border:1px solid var(--border)">
+    <h2>Simulated terminal prices</h2>
+    <canvas id="terminal-hist"></canvas>
+  </article>
+</section>
+
 <script src="{{ url_for('static', filename='options.js') }}"></script>
 {% endblock %}

@@ -21,7 +21,13 @@
   <form id="risk-form">
     <div class="form-grid">
 
-      <label style="grid-column:1/-1">Portfolio assets
+      <label style="grid-column:1/-1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span>Portfolio assets</span>
+          {% if current_user.is_authenticated %}
+          <button type="button" id="import-portfolio-risk-btn" class="secondary" style="font-size:0.72rem;padding:4px 8px;min-height:unset">⚡ Import my portfolio</button>
+          {% endif %}
+        </div>
         <div style="display:flex;gap:8px">
           <input id="stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" style="flex:1">
           <datalist id="stocks" class="stock-datalist"></datalist>
