@@ -4,12 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}QuantLab{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script src="{{ url_for('static', filename='shared.js') }}"></script>
 </head>
 <body>
-  <header><a class="brand" href="/">QuantLab</a><nav><a href="/" {% if request.path == '/' %}class="active"{% endif %}>Stock simulation</a><a href="/options" {% if request.path == '/options' %}class="active"{% endif %}>Option pricing</a><a href="/portfolio" {% if request.path == '/portfolio' %}class="active"{% endif %}>Portfolio</a><a href="/risk" {% if request.path == '/risk' %}class="active"{% endif %}>Risk analytics</a></nav></header>
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="/">QuantLab</a>
+      <nav>
+        <a href="/"        {% if request.path == '/'         %}class="active"{% endif %}>Stock simulation</a>
+        <a href="/options" {% if request.path == '/options'  %}class="active"{% endif %}>Option pricing</a>
+        <a href="/portfolio"{% if request.path == '/portfolio'%}class="active"{% endif %}>Portfolio</a>
+        <a href="/risk"    {% if request.path == '/risk'     %}class="active"{% endif %}>Risk analytics</a>
+      </nav>
+    </div>
+  </header>
   <main>{% block content %}{% endblock %}</main>
 </body>
 </html>

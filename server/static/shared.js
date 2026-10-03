@@ -53,14 +53,14 @@ function renderLogo(ticker, containerSelector) {
   const img = new Image();
   img.src = `https://assets.parqet.com/logos/symbol/${clean}?format=png`;
   img.alt = ticker;
-  img.style.cssText = 'width:48px;height:48px;border-radius:10px;object-fit:contain;background:#fff;padding:4px';
+  img.style.cssText = 'width:44px;height:44px;border-radius:0;object-fit:contain;background:#fff;padding:4px;border:1px solid #1e2e42';
   img.onload = () => { el.innerHTML = ''; el.appendChild(img); };
   img.onerror = () => {
-    // Coloured badge using the ticker's first char as a seed
-    const palette = ['#56d4bb','#75a7ff','#fdba74','#f0abfc','#a3e635','#fca5a5','#67e8f9'];
+    const palette = ['#41c9a0','#6b9fff','#f0a855','#c77dff','#7ae582','#e05c5c'];
     const bg = palette[clean.charCodeAt(0) % palette.length];
-    el.innerHTML = `<div style="width:48px;height:48px;border-radius:10px;background:${bg};
+    el.innerHTML = `<div style="width:44px;height:44px;background:${bg};
       display:flex;align-items:center;justify-content:center;
-      font-weight:800;font-size:.75rem;color:#07111f;letter-spacing:.02em">${clean.slice(0,4)}</div>`;
+      font-weight:700;font-size:.72rem;color:#04140d;letter-spacing:.06em;
+      font-family:'JetBrains Mono',monospace">${clean.slice(0,4)}</div>`;
   };
 }

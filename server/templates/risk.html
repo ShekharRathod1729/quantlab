@@ -1,30 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Risk analytics · QuantLab{% endblock %}
+{% block title %}Risk Analytics · QuantLab{% endblock %}
 {% block content %}
-<section class="intro">
-  <p class="eyebrow">Portfolio risk measures</p>
-  <h1>Analyse portfolio risk</h1>
-  <p>Calculate VaR, CVaR, Sharpe ratio, and maximum drawdown for a weighted portfolio of stocks.</p>
-</section>
 
-<section class="panel">
+<div class="intro">
+  <div class="intro-inner">
+    <div>
+      <p class="eyebrow">Quantitative risk</p>
+      <h1>Portfolio risk analytics</h1>
+      <p>Historical and parametric VaR, CVaR, Sharpe ratio, and maximum drawdown for a weighted multi-asset portfolio.</p>
+    </div>
+    <div class="intro-meta">
+      Historical VaR/CVaR<br>
+      Parametric VaR/CVaR<br>
+      Sharpe · MDD
+    </div>
+  </div>
+</div>
+
+<div class="panel">
   <form id="risk-form">
     <div class="form-grid">
 
-      <!-- Stock picker -->
-      <label style="grid-column:1/-1">
-        Stocks
+      <label style="grid-column:1/-1">Portfolio assets
         <div style="display:flex;gap:8px">
-          <input id="stock-search" placeholder="Search Apple or AAPL" autocomplete="off" style="flex:1">
+          <input id="stock-search" placeholder="AAPL or Apple Inc." autocomplete="off" style="flex:1">
           <datalist id="stocks" class="stock-datalist"></datalist>
-          <button type="button" id="add-stock" class="secondary" style="white-space:nowrap">Add stock</button>
+          <button type="button" id="add-stock" class="secondary">Add</button>
         </div>
       </label>
 
-      <!-- Dynamic weight rows inserted here -->
-      <div id="weight-rows" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px"></div>
+      <div id="weight-rows" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--gap-sm)"></div>
 
-      <label>Portfolio value (USD) <input id="portfolio-value" type="number" min="1" step="100" value="100000" required></label>
+      <label>Portfolio value (USD)
+        <input id="portfolio-value" type="number" min="1" step="100" value="100000" required>
+      </label>
 
       <label>Historical period
         <select id="period">
@@ -48,39 +57,40 @@
 
     </div>
 
-    <p id="weight-sum-msg" class="message" style="margin-top:10px"></p>
+    <p id="weight-sum-msg" class="message" style="margin-top:var(--gap-sm)"></p>
 
-    <div class="actions" style="margin-top:12px">
+    <div class="actions" style="margin-top:var(--gap-md)">
       <button type="submit">Calculate risk measures</button>
     </div>
   </form>
   <p id="message" class="message" aria-live="polite"></p>
-</section>
+</div>
 
 <section id="results" hidden>
-  <h2 style="margin-bottom:14px">Risk measures</h2>
+  <h2>Risk measures</h2>
 
-  <div class="chart-grid" style="grid-template-columns:1fr 1fr;margin-bottom:24px">
-    <article class="chart-card">
+  <div class="risk-grid">
+    <div class="risk-panel">
       <h2>Return &amp; volatility</h2>
       <div id="ret-vol" class="stats"></div>
-    </article>
-    <article class="chart-card">
+    </div>
+    <div class="risk-panel">
       <h2>Sharpe ratio &amp; max drawdown</h2>
       <div id="sharpe-mdd" class="stats"></div>
-    </article>
+    </div>
   </div>
 
-  <div class="chart-grid" style="grid-template-columns:1fr 1fr">
-    <article class="chart-card">
+  <div class="risk-grid">
+    <div class="risk-panel">
       <h2>Historical VaR &amp; CVaR</h2>
       <div id="hist-risk" class="stats"></div>
-    </article>
-    <article class="chart-card">
+    </div>
+    <div class="risk-panel">
       <h2>Parametric VaR &amp; CVaR</h2>
       <div id="param-risk" class="stats"></div>
-    </article>
+    </div>
   </div>
+
 </section>
 
 <script src="{{ url_for('static', filename='risk.js') }}"></script>

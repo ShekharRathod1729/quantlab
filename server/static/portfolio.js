@@ -31,11 +31,10 @@ stockSearch.addEventListener('keydown', e => {
 
 function renderChips() {
   selectedDiv.innerHTML = [...selected.entries()].map(([ticker, label]) =>
-    `<span class="chip" style="background:#091527;border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:.85rem;display:inline-flex;align-items:center;gap:6px">
-      ${label}
-      <button type="button" data-ticker="${ticker}" aria-label="Remove ${ticker}"
-        style="background:none;border:none;color:var(--muted);cursor:pointer;padding:0;font-size:1rem;min-height:unset">✕</button>
-    </span>`
+    `<span class="chip">
+       ${label}
+       <button type="button" data-ticker="${ticker}" aria-label="Remove ${ticker}">✕</button>
+     </span>`
   ).join('');
   selectedDiv.querySelectorAll('button[data-ticker]').forEach(btn => {
     btn.addEventListener('click', () => { selected.delete(btn.dataset.ticker); renderChips(); });
