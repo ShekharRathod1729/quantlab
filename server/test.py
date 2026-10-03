@@ -1,8 +1,10 @@
-import markowitz
+import matplotlib.pylab as plt
+import bsm_stocks
 
-ticker_symbols = ["AAPL", "MSFT", "GOOG", "NVDA"]
-req_return = 0.5
-budget = 10000
+A = bsm_stocks.bsm_price_vs_time("AAPL", 350, "1m", "call")
 
-result = markowitz.markowitz_long(ticker_symbols, req_return, budget)
-print(result)
+strikes, values = A["time"], A["opt_vals"]
+
+plt.figure(figsize=(10, 6))
+plt.plot(strikes, values)
+plt.show()
